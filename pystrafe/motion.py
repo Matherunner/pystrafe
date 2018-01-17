@@ -1,4 +1,4 @@
-"""Mathematical routines for player motion under gravity.
+"""Functions related to player motion under gravity.
 
 Typically you would want to compute ``K`` using the ``strafe_K`` function, which
 is needed by many of the functions in this module.
@@ -157,16 +157,16 @@ def strafe_solve_speedxi(speedzi, K, x, z, g):
     negative.
 
     If the time it takes to reach the vertical position is longer or equal to
-    the *maximum* time it takes the reach the horizontal position (calculated by
-    setting the initial horizontal speed to zero), the function will simply
-    return 0.0, indicating that strafing from zero speed is enough to reach the
-    final horizontal position *sooner than required*. In such a case, the user
-    needs to manually "slow down" the strafing, by taking a longer path in 3-d
-    space, stop strafing altogether at some point, or "backpedalling" in air, so
-    that both the horizontal and vertical positions can hit the final position
-    exactly at the same time. In other words, the user must "wait" for the
-    vertical position to move up to the final position before the horizontal
-    position should hit it.
+    the *maximum* time it takes the reach the horizontal position (calculated
+    by setting the initial horizontal speed to zero), the function will simply
+    return 0.0, indicating that strafing from zero speed is enough to reach
+    the final horizontal position *sooner than required*. In such a case, the
+    user needs to manually "slow down" the strafing, by taking a longer path
+    in 3D space, stop strafing altogether at some point, or "backpedalling" in
+    air, so that both the horizontal and vertical positions can hit the final
+    position exactly at the same time. In other words, the user must "wait"
+    for the vertical position to move up to the final position before the
+    horizontal position should hit it.
 
     The result is computed using the ``brentq`` function provided by scipy.
     """
@@ -227,6 +227,8 @@ def solve_boost_min_dmg(vi, K, x, z, g):
             dy = gravity_speediz_distance_time(tx, z, g) - vi[1]
         except ValueError:
             dy = 0.0
+        # max to simulate inequality constraint, where the final position
+        # being above the minimum permissible is sufficient
         return max(dy, 0.0)
 
     def fun(dx):

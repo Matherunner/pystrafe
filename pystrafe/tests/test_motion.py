@@ -173,8 +173,6 @@ def test_strafe_solve_speedxi_zero_x():
     with raises(ValueError):
         motion.strafe_solve_speedxi(0, K, 0, 1, 800)
     with raises(ValueError):
-        motion.strafe_solve_speedxi(0, K, 0, 1, 800)
-    with raises(ValueError):
         motion.strafe_solve_speedxi(40, K, 0, 2, 800)
     assert motion.strafe_solve_speedxi(40, K, 0, 1, 800) == approx(0)
 
