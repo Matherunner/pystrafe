@@ -16,3 +16,8 @@ def vec_normalize(v):
 
 def vec_dot(a, b, length):
     return sum(a[i] * b[i] for i in range(length))
+
+def vec_cross(a, b):
+    return [a[1] * b[2] - a[2] * b[1],
+            a[2] * b[0] - a[0] * b[2],
+            a[0] * b[1] - a[1] * b[0]]

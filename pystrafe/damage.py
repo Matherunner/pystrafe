@@ -28,13 +28,13 @@ def hpap_damage(hp, ap, dmg):
     hp -= int(dmg - 2 * ap if common.float_zero(new_ap) else 0.2 * dmg)
     return hp, new_ap
 
-def boost_dhp(dhp, r, infr):
-    """Compute the delta-v resulting from the health loss.
-
-    All vectors are 3D.
-    """
-    d = [r[0] - infr[0], r[1] - infr[1], r[2] - infr[2] + 10]
-    pass
+#def boost_dhp(dhp, r, infr):
+#    """Compute the delta-v resulting from the health loss.
+#
+#    All vectors are 3D.
+#    """
+#    d = [r[0] - infr[0], r[1] - infr[1], r[2] - infr[2] + 10]
+#    pass
 
 def ap_dhp_damage(dhp, dmg):
     """Compute the AP needed to achieve the desired HP loss from the given
@@ -76,8 +76,8 @@ def fall(vfz):
     """
     return max(0.0, 25 * (vfz - 580) / 111)
 
-def radius_falloff():
-    pass
-
-def hp_distrib(hp, xs):
-    pass
+#def radius_falloff():
+#    pass
+#
+#def hp_distrib(hp, xs):
+#    pass

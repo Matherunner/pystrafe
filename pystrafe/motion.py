@@ -4,11 +4,23 @@ Typically you would want to compute ``K`` using the ``strafe_K`` function, which
 is needed by many of the functions in this module.
 
 Consult the Half-Life physics documentation at https://www.jwchong.com/hl/.
+
+The routines in this module assume:
+
+- continuous time
+- no anglemod
+- strafing along a perfect straight line
+
+These assumptions make implementations much less complex, less error prone, and
+less information needed to perform the computations.
 """
 
 import math
 import scipy.optimize as opt
 from pystrafe import common
+
+jumpspeed = 268.32815729997476
+jumpspeed_lj = 299.33259094191531
 
 def strafe_K(L, tau, M, A):
     """Compute K based on strafing parameters.
@@ -28,6 +40,16 @@ def strafe_K(L, tau, M, A):
     if LtauMA <= 0:
         return L * L / tau
     return M * A * (L + LtauMA)
+
+def strafe_K_std(tau):
+    """Compute K based on Half-Life default settings and airstrafing.
+
+    The default settings refer to L = 30, M = 320, and A = 10. This function is
+
+    >>> strafe_K_std(0.01) == strafe_K(30, 0.01, 320, 10)
+    True
+    """
+    return strafe_K(30, tau, 320, 10)
 
 def strafe_speedxf(t, speed, K):
     """Compute the speed after strafing for t seconds.
