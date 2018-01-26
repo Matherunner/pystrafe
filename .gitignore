@@ -2,3 +2,6 @@ __pycache__
 *.pyc
 .cache
 *.swp
+*.egg-info
+MANIFEST
+dist/

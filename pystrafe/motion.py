@@ -134,7 +134,7 @@ def strafe_time(x, speedxi, K):
     return max(ret, 0.0)
 
 def gravity_speediz_distance_time(t, z, g):
-    """Compute the initial speed need to travel to the given ``z`` position.
+    """Compute the initial speed needed to travel to the given ``z`` position.
 
     z can be negative.
     """
@@ -146,7 +146,7 @@ def gravity_speediz_distance_time(t, z, g):
         return math.copysign(math.inf, z)
 
 def gravity_time_speediz_z(speedzi, z, g):
-    """Compute the time it takes for to reach a height given initial vertical
+    """Compute the time it takes to reach a height given initial vertical
     velocity.
 
     z can be negative.
