@@ -1,11 +1,13 @@
-"""Functions related to player motion under gravity.
+r"""Functions related to player motion under gravity.
 
-Typically you would want to compute ``K`` using the ``strafe_K`` function, which
-is needed by many of the functions in this module.
+Typically you would want to compute *K* using the :py:meth:`strafe_K` or
+:py:func:`strafe_K_std` function, which is needed by many of the functions in
+this module.
 
-Consult the Half-Life physics documentation at https://www.jwchong.com/hl/.
-
-The routines in this module assume:
+All functions in this module ignore the :math:`\Theta = 0` strafing
+corresponding to :math:`L - k_e \tau MA > \lVert\mathbf{v}\rVert`. The user is
+responsible of verifying this assumption, which is not hard to do. In addition,
+these routines in this module assume:
 
 - continuous time
 - no anglemod
@@ -13,22 +15,29 @@ The routines in this module assume:
 
 These assumptions make implementations much less complex, less error prone, and
 less information needed to perform the computations.
+
+Consult the Half-Life physics documentation at https://www.jwchong.com/hl/.
 """
 
 import math
+import enum
 import scipy.optimize as opt
 from pystrafe import common
 
-jumpspeed = 268.32815729997476
-jumpspeed_lj = 299.33259094191531
+class Consts(enum.Enum):
+    """Constants relevant in common Half-Life physics problems."""
+
+    jumpspeed = 268.32815729997476
+    """The normal jump speed."""
+
+    jumpspeedlj = 299.33259094191531
+    """The jump speed using a long jump module."""
+
 
 def strafe_K(L, tau, M, A):
-    """Compute K based on strafing parameters.
+    """Compute *K* based on strafing parameters.
 
-    This function will not deal with case 3 strafing where L - tau MA > speed,
-    which occurs when the speed is sufficiently small. The user is responsible
-    of verifying this assumption. Consequently, this function also does not
-    accept negative parameters, which may give rise to case 3 strafing.
+    This function does not accept negative parameters.
 
     >>> strafe_K(30, 0.001, 320, 10)
     181760.0
@@ -42,9 +51,11 @@ def strafe_K(L, tau, M, A):
     return M * A * (L + LtauMA)
 
 def strafe_K_std(tau):
-    """Compute K based on Half-Life default settings and airstrafing.
+    r"""Compute K based on Half-Life default settings and airstrafing.
 
-    The default settings refer to L = 30, M = 320, and A = 10. This function is
+    The default settings refer to :math:`L = 30`, :math:`M = 320`, and :math:`A
+    = 10`. This function is therefore equivalent to calling :py:func:`strafe_K`
+    with these values as the parameters. For example,
 
     >>> strafe_K_std(0.01) == strafe_K(30, 0.01, 320, 10)
     True
@@ -52,16 +63,9 @@ def strafe_K_std(tau):
     return strafe_K(30, tau, 320, 10)
 
 def strafe_speedxf(t, speed, K):
-    """Compute the speed after strafing for t seconds.
+    """Compute the speed after strafing for *t* seconds.
 
-    Assumes case 1 or case 2 strafing, and does not handle edge cases present in
-    the game when the speed is very small.
-
-    >>> K = 320 * 10 * (60 - 0.001 * 320 * 10)
-    >>> '{:.10g}'.format(strafe_speedxf(2, 320, K))
-    '682.5833282'
-
-    >>> K = 900 / 0.01
+    >>> K = strafe_K(30, 0.01, 320, 100)
     >>> '{:.10g}'.format(strafe_speedxf(3.5, 10, K))
     '561.337688'
 
@@ -75,15 +79,15 @@ def strafe_speedxf(t, speed, K):
     return math.sqrt(speed * speed + t * K)
 
 def strafe_distance(t, speed, K):
-    """Compute the distance after strafing for t seconds.
+    """Compute the distance after strafing for *t* seconds.
 
-    Assumes case 1 or case 2 strafing, and does not handle edge cases present in
-    the game when the speed is very small. In addition, this is a continuous
-    time approximation to the true distance a player would have travelled in
-    Half-Life. Nevertheless, the approximation is good even at lower frame rates
-    and is rarely a concern.
+    The returned distance is not well defined for negative *t* and *speed*.
 
-    >>> K = 320 * 10 * (60 - 0.001 * 320 * 10)
+    Note that this is a continuous time approximation to the true distance a
+    player would have travelled in Half-Life. Nevertheless, the approximation is
+    good even at lower frame rates and is rarely a concern.
+
+    >>> K = strafe_K_std(0.001)
     >>> '{:.10g}'.format(strafe_distance(2.5, 400, K))
     '1531.650819'
     >>> '{:.10g}'.format(strafe_distance(1.3, 0, K))

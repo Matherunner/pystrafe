@@ -40,18 +40,49 @@ def ap_dhp_damage(dhp, dmg):
     """Compute the AP needed to achieve the desired HP loss from the given
     damage.
 
-    The health loss is truncated to an integer. Note that inputting a value of 0
-    for ``dmg`` implies a damage is still taken, albeit with a damage value of
-    zero. This distinction is significant when negative armour values are
-    returned.
+    The input health loss *dhp* is always truncated before computations.
+    Negative *dhp* and/or *dmg* are accepted. Note that some combinations of
+    *dhp* and *dmg* do not emit a solution.
 
-    TODO: talk about return values
+    Return a 4-tuple (*apl*, *apu*, *bl*, *bu*), where *apl* and *apu* form an
+    interval, and the specific meaning of these values depends on the strings
+    *bl* and *bu*.
 
-    When ``t2`` is ``inf``, then ``ub`` indicates the maximum value of AP that
-    will result in zero AP after damage. The upper bound in this case always
-    includes the end point (i.e. implicit type ``]``). Any value of AP above
-    this upper bound will still result in the same health loss, but there would
-    be nonzero AP left after the damage.
+    *apl* always refers to the lower bound of the amount of AP. If *bl* is
+    ``'('``, then this lower point is not included in the interval. If *bl* is
+    ``'['``, then this lower point is included. If *bl* is ``None``, then *apl*
+    will be ``NaN`` and therefore there is no solution to the given input.
+
+    *apu* refers to the upper bound of the amount of AP if *bu* is ``')'`` or
+    ``']'``. That is, if *bu* is ``')'``, then this upper point is not included.
+    If *bu* is ``']'``, then this upper point is included. If *bu* is ``'inf'``,
+    then this is the inclusive upper bound such that the final AP would be zero
+    given *dmg*. In other words, if the AP is set to be higher than *apu*, the
+    same *dmg* would still result in the desired HP loss, except that the final
+    AP would be nonzero. For example,
+
+    >>> ap_dhp_damage(1, 8)
+    (3.0, 3.2, '(', 'inf')
+
+    If we apply the same *dmg* of 8 but with 3.2 AP, we obtain a health loss of
+    1 (reduced from 100 down to 99 in this case) and 0 AP as expected:
+
+    >>> hpap_damage(100, 3.2, 8)
+    (99, 0.0)
+
+    But if we increase the AP amount beyond 3.2, then we will get a nonzero AP.
+
+    >>> hpap_damage(100, 3.7, 8)
+    (99, 0.5)
+    >>> hpap_damage(100, 3.20001, 8) != (99, 0.0)
+    True
+
+    If *bu* is ``None``, then *apu* will be ``NaN`` and therefore there is no
+    solution to the given input.
+
+    Note that inputting a value of 0 for *dmg* implies a damage is still taken,
+    albeit with a value of zero. This distinction is significant when negative
+    armour values are returned.
     """
     dhp = int(dhp)
     if dhp < 0:
@@ -73,6 +104,9 @@ def ap_dhp_damage(dhp, dmg):
 
 def fall(vfz):
     """Compute the fall damage inflicted given final vertical speed on touch.
+
+    Return the untruncated damage corresponding to touch-ground vertical speed
+    *vfz*. Only positive *vfz* values are meaningful.
     """
     return max(0.0, 25 * (vfz - 580) / 111)
 
