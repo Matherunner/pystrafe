@@ -1,11 +1,16 @@
 import math
-from pystrafe import ladder
+from pystrafe import ladder, view
 from pytest import approx, raises
 
 pi_2 = 0.5 * math.pi
+pi_4 = 0.25 * math.pi
 
-#def test_climb_velocity():
-#    assert ladder.maxspeed_normal([1, 0, 0], f, s) == (0, 0)
+def test_climb_velocity():
+    fv, sv = view.angles_to_vectors(-pi_2, pi_2, 3)
+    assert ladder.climb_velocity([1, 0, 0], fv, sv, 1, -1) == [approx(0), approx(0), approx(400)]
+    fv, sv = view.angles_to_vectors(-pi_2, math.radians(135), 3)
+    assert ladder.climb_velocity([math.cos(-pi_4), math.sin(-pi_4), 0], fv, sv, 1, 0) \
+        == [approx(0), approx(0), approx(200)]
 
 def test_maxspeed_normal_combinations():
     assert ladder.maxspeed_normal([1, 0, 0], 1, 1, 1) == (-pi_2, -pi_2)

@@ -42,7 +42,7 @@ def ap_dhp_damage(dhp, dmg):
 
     The input health loss *dhp* is always truncated before computations.
     Negative *dhp* and/or *dmg* are accepted. Note that some combinations of
-    *dhp* and *dmg* do not emit a solution.
+    *dhp* and *dmg* do not admit a solution.
 
     Return a 4-tuple (*apl*, *apu*, *bl*, *bu*), where *apl* and *apu* form an
     interval, and the specific meaning of these values depends on the strings
@@ -56,10 +56,10 @@ def ap_dhp_damage(dhp, dmg):
     *apu* refers to the upper bound of the amount of AP if *bu* is ``')'`` or
     ``']'``. That is, if *bu* is ``')'``, then this upper point is not included.
     If *bu* is ``']'``, then this upper point is included. If *bu* is ``'inf'``,
-    then this is the inclusive upper bound such that the final AP would be zero
-    given *dmg*. In other words, if the AP is set to be higher than *apu*, the
-    same *dmg* would still result in the desired HP loss, except that the final
-    AP would be nonzero. For example,
+    then this is the *inclusive* upper bound such that the final AP would be
+    zero given *dmg*. In other words, if the AP is set to be higher than *apu*,
+    the same *dmg* would still result in the desired HP loss, except that the
+    final AP would be nonzero. For example,
 
     >>> ap_dhp_damage(1, 8)
     (3.0, 3.2, '(', 'inf')
