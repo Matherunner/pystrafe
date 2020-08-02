@@ -7,7 +7,7 @@ from pystrafe import common
 def climb_velocity(n, f, s, F, S):
     """Compute the climbing velocity given unit acceleration vectors.
 
-    Parameters *n*, *f*, and *s* are 3-d vectors. *n* is the unit normal of the
+    Parameters *n*, *f*, and *s* are 3D vectors. *n* is the unit normal of the
     climbing surface. There is no restriction on the directionality of *n*. *f*
     is the unit forward acceleration of the player, while *s* is the unit side
     acceleration of the player.
@@ -17,7 +17,7 @@ def climb_velocity(n, f, s, F, S):
     means ``+back`` is held down. Positive *S* means ``+moveright`` is held
     down, while negative *S* means ``+moveleft`` is held down.
 
-    Return the player climbing velocity in 3-d.
+    Return the player climbing velocity in 3D.
     """
     if not common.float_equal(common.vec_dot(n, n, 3), 1):
         raise ValueError('n must be a unit vector')
@@ -34,14 +34,14 @@ def climb_velocity(n, f, s, F, S):
     common.vec_add(u, f)
     common.vec_add(u, s)
     cross = common.vec_cross([0, 0, 1], n)
-    cross_norm = common.vec_dot(cross, cross, 3)
+    cross_norm = common.vec_dot(cross, cross)
     if common.float_zero(cross_norm):
         fac = [0.0, 0.0, 0.0]
     else:
         fac = common.vec_cross(n, cross)
         common.vec_mul(fac, 1 / cross_norm)
     common.vec_add(fac, n)
-    common.vec_mul(fac, common.vec_dot(u, n, 3))
+    common.vec_mul(fac, common.vec_dot(u, n))
     common.vec_sub(u, fac)
     return u
 

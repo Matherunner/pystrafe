@@ -1,3 +1,4 @@
+import math
 from pytest import approx
 from pystrafe import common
 
@@ -46,3 +47,14 @@ def test_vec_dot():
 
 def test_vec_length():
     assert common.vec_length([3, 1, -2], 3) == approx(3.741657387)
+
+def test_anglemod_rad():
+    assert common.anglemod_rad(0) == 0
+    assert common.anglemod_rad(math.radians(10)) == 1820 * common.anglemod_u_rad
+    assert common.anglemod_rad(math.radians(-350)) == 1821 * common.anglemod_u_rad
+    assert common.anglemod_rad(math.pi / 4) == math.pi / 4
+
+def test_anglemod_deg():
+    assert common.anglemod_deg(0) == 0
+    assert common.anglemod_deg(30) == 5461 * common.anglemod_u_deg
+    assert common.anglemod_deg(-330) == 5462 * common.anglemod_u_deg

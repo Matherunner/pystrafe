@@ -12,6 +12,14 @@ def test_climb_velocity():
     assert ladder.climb_velocity([math.cos(-pi_4), math.sin(-pi_4), 0], fv, sv, 1, 0) \
         == [approx(0), approx(0), approx(200)]
 
+def test_climb_velocity_2d():
+    with raises(IndexError):
+        ladder.climb_velocity([1, 0], [-1, 0], [0, 1], 1, 1)
+
+def test_maxspeed_normal_2d():
+    with raises(IndexError):
+        ladder.maxspeed_normal([1, 0], 1, 1, 1)
+
 def test_maxspeed_normal_combinations():
     assert ladder.maxspeed_normal([1, 0, 0], 1, 1, 1) == (-pi_2, -pi_2)
     assert ladder.maxspeed_normal([1, 0, 0], 1, 1, -1) == (-pi_2, pi_2)

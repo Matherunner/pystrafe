@@ -1,5 +1,6 @@
 from pystrafe import common
 from pystrafe import view
+from pystrafe import basic
 from pystrafe import motion
 from pystrafe import damage
 

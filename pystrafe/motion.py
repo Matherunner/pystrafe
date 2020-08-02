@@ -20,19 +20,11 @@ Consult the Half-Life physics documentation at https://www.jwchong.com/hl/.
 """
 
 import math
-import enum
 import scipy.optimize as opt
 from pystrafe import common
 
-class Consts(enum.Enum):
-    """Constants relevant in common Half-Life physics problems."""
-
-    jumpspeed = 268.32815729997476
-    """The normal jump speed."""
-
-    jumpspeedlj = 299.33259094191531
-    """The jump speed using a long jump module."""
-
+jumpspeed = 268.32815729997476
+jumpspeedlj = 299.33259094191531
 
 def strafe_K(L, tau, M, A):
     """Compute *K* based on strafing parameters.
@@ -83,9 +75,11 @@ def strafe_distance(t, speed, K):
 
     The returned distance is not well defined for negative *t* and *speed*.
 
-    Note that this is a continuous time approximation to the true distance a
-    player would have travelled in Half-Life. Nevertheless, the approximation is
-    good even at lower frame rates and is rarely a concern.
+    Note that this is a constant-time continuous time approximation to the true
+    distance a player would have travelled in Half-Life. Specifically, the
+    Euler-Maclaurin formula is used to approximate the discrete sum of square
+    roots, truncated to :math:`O(t^{-1/2})` accuracy. This approximation is good
+    even at lower frame rates.
 
     >>> K = strafe_K_std(0.001)
     >>> '{:.10g}'.format(strafe_distance(2.5, 400, K))
@@ -96,6 +90,7 @@ def strafe_distance(t, speed, K):
     0.0
     >>> strafe_distance(5000, 5000, 0)
     25000000.0
+
     """
     if K < 0:
         raise ValueError('K must be > 0')

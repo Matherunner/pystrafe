@@ -9,7 +9,7 @@ def angles_to_vectors(pitch, yaw, dim):
 
     Angles must be in radians, and the roll is assumed to be zero. *dim*
     specifies the dimensions of pitch and yaw, and can be either ``2`` or ``3``.
-    In the 2-d case, this function is equivalent to computing the 3-d vectors,
+    In the 2D case, this function is equivalent to computing the 3D vectors,
     discarding the *z* component, and then normalising only the *x* and *y*
     components.
 
@@ -30,7 +30,7 @@ def angles_to_vectors(pitch, yaw, dim):
     the implementation of this function, the *fv* and *sv* vectors would still
     be computed as though the pitch is not vertical, but they may not behave
     correctly in game or other algorithms based on normalising the horizontal
-    components of the 3-d vectors.
+    components of the 3D vectors.
     """
     syaw, cyaw = math.sin(yaw), math.cos(yaw)
     spitch, cpitch = math.sin(pitch), math.cos(pitch)
