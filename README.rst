@@ -1,8 +1,8 @@
-========
-pystrafe
-========
+=========================
+pystrafe (very rough WIP)
+=========================
 
-**NOTE**: This is work in progress! The interface may change from version to
+**NOTE**: This is **work in progress**! The interface may change from version to
 version.
 
 A Python module of Half-Life physics routines for research and experimentation
